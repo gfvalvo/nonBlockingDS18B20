@@ -28,7 +28,7 @@ uint8_t nonBlockingDS18B20::begin(uint8_t defaultResolution = 9) {
 	}
 
 	// Get memory space for the number of temp sensors located
-	infoPtr = (tempSensorInfo *) malloc()
+	infoPtr = (tempSensorInfo *) malloc(
 			numTempSensors * sizeof(tempSensorInfo));
 	if (infoPtr == NULL) {
 		return 0;
@@ -153,7 +153,8 @@ void nonBlockingDS18B20::getAddressFromTempSensorIndex(DeviceAddress addr,
 	memcpy(addr, (infoPtr + tempSensorIndex)->address, sizeof(DeviceAddress));
 }
 
-uint8_t nonBlockingDS18B20::getOneWireIndexFromTempSensorIndex(uint8_t tempSensorIndex) {
+uint8_t nonBlockingDS18B20::getOneWireIndexFromTempSensorIndex(
+		uint8_t tempSensorIndex) {
 	tempSensorIndex = constrain(tempSensorIndex, 0, numTempSensors - 1);
 	return (infoPtr + tempSensorIndex)->oneWireIndex;
 }
