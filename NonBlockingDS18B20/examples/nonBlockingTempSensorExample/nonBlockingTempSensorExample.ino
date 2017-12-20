@@ -5,7 +5,7 @@ enum machineStates {
 	IDLE, WAITING_FOR_CONVERSION, ABORTED
 };
 
-const uint8_t ONE_WIRE_BUS = 4; // Change this to Pin # connected to OneWire bus
+const uint8_t ONE_WIRE_BUS = 2; // Change this to Pin # connected to OneWire bus
 const uint8_t RESOLUTION = 9;
 const unsigned long maxWaitTime = 5000;
 const unsigned long interMeasurementPeriod = 1000;
@@ -26,9 +26,13 @@ void setup() {
 
 	Serial.begin(115200);
 	delay(2000);
+	Serial.println("Starting");
 
 	// Locate and Enumerate the DS18xx-type Temperature Sensors
 	numDS18 = tempSensors.begin(RESOLUTION);
+	Serial.print("Found on OneWire: ");
+	Serial.print(DallasTemperature::getDeviceCount());
+	Serial.println(" Devices");
 	if (numDS18 == 0) {
 		Serial.println(
 				F("Did not locate any DS-type Temperature Sensors, aborting"));
