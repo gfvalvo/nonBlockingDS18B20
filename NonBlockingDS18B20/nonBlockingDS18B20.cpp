@@ -17,6 +17,9 @@ uint8_t nonBlockingDS18B20::begin(uint8_t defaultResolution = 9) {
 	numTempSensors = 0;
 	parasiteMode = DallasTemperature::isParasitePowerMode();
 	numTempSensors = DallasTemperature::getDS18Count();
+	if (numTempSensors == 0) {
+		return 0;
+	}
 	/*---------------------
 	// Count number of DS18xxx-type devices on bus
 	for (index1 = 0; index1 < DallasTemperature::getDeviceCount(); index1++) {
