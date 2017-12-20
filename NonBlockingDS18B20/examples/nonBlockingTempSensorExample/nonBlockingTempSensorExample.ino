@@ -26,13 +26,9 @@ void setup() {
 
 	Serial.begin(115200);
 	delay(2000);
-	Serial.println("Starting");
 
 	// Locate and Enumerate the DS18xx-type Temperature Sensors
 	numDS18 = tempSensors.begin(RESOLUTION);
-	Serial.print("Found on OneWire: ");
-	Serial.print(DallasTemperature::getDeviceCount());
-	Serial.println(" Devices");
 	if (numDS18 == 0) {
 		Serial.println(
 				F("Did not locate any DS-type Temperature Sensors, aborting"));
