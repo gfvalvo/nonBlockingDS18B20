@@ -16,7 +16,8 @@ uint8_t nonBlockingDS18B20::begin(uint8_t defaultResolution = 9) {
 	DallasTemperature::setWaitForConversion(false);
 	numTempSensors = 0;
 	parasiteMode = DallasTemperature::isParasitePowerMode();
-
+	numTempSensors = DallasTemperature::getDS18Count();
+	/*---------------------
 	// Count number of DS18xxx-type devices on bus
 	for (index1 = 0; index1 < DallasTemperature::getDeviceCount(); index1++) {
 		if (!DallasTemperature::getAddress(addr, index1)) {
@@ -26,6 +27,7 @@ uint8_t nonBlockingDS18B20::begin(uint8_t defaultResolution = 9) {
 			numTempSensors++;
 		}
 	}
+	 -------------------------*/
 
 	// Get memory space for the number of temp sensors located
 	infoPtr = (tempSensorInfo *) malloc(
