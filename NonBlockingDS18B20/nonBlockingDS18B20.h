@@ -17,9 +17,11 @@ public:
 			DallasTemperature(w) {
 	}
 	void getAddressFromTempSensorIndex(DeviceAddress, uint8_t);
+	void setUseConversionTimer(boolean);
 	boolean startConvertion(void);
 	boolean startConvertion(uint8_t);
 	boolean isConversionDone(void);
+	boolean getUseConversionTimer();
 	uint8_t begin(uint8_t);
 	uint8_t getOneWireIndexFromTempSensorIndex(uint8_t);
 	int16_t getLatestTempRaw(uint8_t);
@@ -29,6 +31,7 @@ public:
 private:
 	boolean parasiteMode;
 	boolean conversionInProcess;
+	boolean useConversionTimer = true;
 	uint8_t numTempSensors;
 	uint32_t waitTime;
 	uint32_t conversionStartTime;

@@ -21,15 +21,15 @@ uint8_t nonBlockingDS18B20::begin(uint8_t defaultResolution = 9) {
 		return 0;
 	}
 	/*---------------------
-	// Count number of DS18xxx-type devices on bus
-	for (index1 = 0; index1 < DallasTemperature::getDeviceCount(); index1++) {
-		if (!DallasTemperature::getAddress(addr, index1)) {
-			return 0;
-		}
-		if (DallasTemperature::validFamily(addr)) {
-			numTempSensors++;
-		}
-	}
+	 // Count number of DS18xxx-type devices on bus
+	 for (index1 = 0; index1 < DallasTemperature::getDeviceCount(); index1++) {
+	 if (!DallasTemperature::getAddress(addr, index1)) {
+	 return 0;
+	 }
+	 if (DallasTemperature::validFamily(addr)) {
+	 numTempSensors++;
+	 }
+	 }
 	 -------------------------*/
 
 	// Get memory space for the number of temp sensors located
@@ -70,12 +70,10 @@ boolean nonBlockingDS18B20::startConvertion(uint8_t tempSensorIndex) {
 			(infoPtr + tempSensorIndex)->address);
 	if (success) {
 		conversionInProcess = true;
+		conversionStartTime = millis();
+		waitTime = DallasTemperature::millisToWaitForConversion(
+				DallasTemperature::getResolution());
 		(infoPtr + tempSensorIndex)->readingPending = true;
-		if (parasiteMode) {
-			conversionStartTime = millis();
-			waitTime = DallasTemperature::millisToWaitForConversion(
-					DallasTemperature::getResolution());
-		}
 	}
 	return success;
 }
@@ -87,11 +85,9 @@ boolean nonBlockingDS18B20::startConvertion() {
 	}
 	DallasTemperature::requestTemperatures();
 	conversionInProcess = true;
-	if (parasiteMode) {
-		conversionStartTime = millis();
-		waitTime = DallasTemperature::millisToWaitForConversion(
-				DallasTemperature::getResolution());
-	}
+	conversionStartTime = millis();
+	waitTime = DallasTemperature::millisToWaitForConversion(
+			DallasTemperature::getResolution());
 	for (index = 0; index < numTempSensors; index++) {
 		(infoPtr + index)->readingPending = true;
 	}
@@ -121,7 +117,7 @@ float nonBlockingDS18B20::getLatestTempF(uint8_t tempSensorIndex) {
 boolean nonBlockingDS18B20::isConversionDone() {
 	boolean done = true;
 	if (conversionInProcess) {
-		if (parasiteMode) {
+		if (parasiteMode || useConversionTimer) {
 			if (millis() - conversionStartTime >= waitTime) {
 				conversionInProcess = false;
 				updateTemps();
@@ -164,3 +160,10 @@ uint8_t nonBlockingDS18B20::getOneWireIndexFromTempSensorIndex(
 	return (infoPtr + tempSensorIndex)->oneWireIndex;
 }
 
+boolean nonBlockingDS18B20::getUseConversionTimer() {
+	return useConversionTimer;
+}
+
+void nonBlockingDS18B20::setUseConversionTimer(boolean state) {
+	useConversionTimer = state;
+}
