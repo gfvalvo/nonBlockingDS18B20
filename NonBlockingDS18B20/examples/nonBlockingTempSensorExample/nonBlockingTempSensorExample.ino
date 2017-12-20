@@ -5,7 +5,7 @@ enum machineStates {
 	IDLE, WAITING_FOR_CONVERSION, ABORTED
 };
 
-const uint8_t ONE_WIRE_BUS = 2;
+const uint8_t ONE_WIRE_BUS = 4; // Change this to Pin # connected to OneWire bus
 const uint8_t RESOLUTION = 9;
 const unsigned long maxWaitTime = 5000;
 const unsigned long interMeasurementPeriod = 1000;
@@ -89,7 +89,7 @@ void loop() {
 			for (index = 0; index < numDS18; index++) {
 				Serial.print(F("Sensor "));
 				Serial.print(index);
-				Serial.print(F("Results:  "));
+				Serial.print(F(" Results:  "));
 				Serial.print(tempSensors.getLatestTempRaw(index));
 				Serial.print(F(" (Raw), "));
 				Serial.print(tempSensors.getLatestTempC(index), 1);
