@@ -25,7 +25,9 @@ times the loop() executed while the measurement was in process.
 ### Methods:
 
 Class Constructor
+
 	nonBlockingDS18B20(OneWire *w)
+
 Arguments:
   w - pointer to an instance of a OneWire bus object
   
