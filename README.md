@@ -31,5 +31,6 @@ Class Constructor
 Arguments:
   w - pointer to an instance of a OneWire bus object
   
-Returns
+Returns:
+
   N/A
