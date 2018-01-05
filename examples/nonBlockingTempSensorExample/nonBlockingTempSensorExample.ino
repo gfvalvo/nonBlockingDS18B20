@@ -72,11 +72,12 @@ void loop() {
 	unsigned long currentMillis;
 	static uint32_t loopCount = 0;
 
+	currentMillis = millis();
 	switch (currentState) {
 	case WAITING_FOR_CONVERSION:
 		if (tempSensors.isConversionDone()) {
 			// Measurement has finished print results
-			measurementStopTime = millis();
+			measurementStopTime = currentMillis;
 			Serial.print(F("Temp Measurement of "));
 			Serial.print(numDS18);
 			Serial.print(F(" Sensors Took: "));
@@ -100,8 +101,8 @@ void loop() {
 			Serial.println();
 			// Hang out until time for next measurement
 			currentState = IDLE;
-			interMeasurementTimer = millis();
-		} else if (millis() - measurementStartTime >= maxWaitTime) {
+			interMeasurementTimer = currentMillis;
+		} else if (currentMillis - measurementStartTime >= maxWaitTime) {
 			Serial.println(
 					F(
 							"Timed Out Waiting for Measurements to Complete -- Aborting"));
@@ -110,7 +111,6 @@ void loop() {
 		break;
 
 	case IDLE:
-		currentMillis = millis();
 		// Check if it's time to start another measurement
 		if (currentMillis - interMeasurementTimer >= interMeasurementPeriod) {
 			currentState = WAITING_FOR_CONVERSION;
@@ -132,7 +132,7 @@ void loop() {
 	loopCount++;
 }
 
-// function to print a device address
+// Print a device address
 void printAddress(DeviceAddress deviceAddress) {
 	for (uint8_t i = 0; i < 8; i++) {
 		// zero pad the address if necessary

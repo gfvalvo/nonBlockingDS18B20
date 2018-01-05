@@ -2,7 +2,7 @@
 #include "nonBlockingDS18B20.h"
 
 struct tempSensorInfo {
-	DeviceAddress address;
+	DeviceAddress oneWireAddress;
 	int16_t lastReadingRaw;
 	uint8_t oneWireIndex;
 	boolean readingPending;
@@ -20,17 +20,6 @@ uint8_t nonBlockingDS18B20::begin(uint8_t defaultResolution = 9) {
 	if (numTempSensors == 0) {
 		return 0;
 	}
-	/*---------------------
-	 // Count number of DS18xxx-type devices on bus
-	 for (index1 = 0; index1 < DallasTemperature::getDeviceCount(); index1++) {
-	 if (!DallasTemperature::getAddress(addr, index1)) {
-	 return 0;
-	 }
-	 if (DallasTemperature::validFamily(addr)) {
-	 numTempSensors++;
-	 }
-	 }
-	 -------------------------*/
 
 	// Get memory space for the number of temp sensors located
 	infoPtr = (tempSensorInfo *) malloc(
@@ -46,8 +35,8 @@ uint8_t nonBlockingDS18B20::begin(uint8_t defaultResolution = 9) {
 			return 0;
 		}
 		if (DallasTemperature::validFamily(addr)) {
-			memcpy((infoPtr + index2)->address, addr, sizeof(DeviceAddress));
-			DallasTemperature::setResolution((infoPtr + index2)->address,
+			memcpy((infoPtr + index2)->oneWireAddress, addr, sizeof(DeviceAddress));
+			DallasTemperature::setResolution((infoPtr + index2)->oneWireAddress,
 					defaultResolution);
 			(infoPtr + index2)->lastReadingRaw = DEVICE_DISCONNECTED_RAW;
 			(infoPtr + index2)->oneWireIndex = index1;
@@ -67,7 +56,7 @@ boolean nonBlockingDS18B20::startConvertion(uint8_t tempSensorIndex) {
 	}
 	tempSensorIndex = constrain(tempSensorIndex, 0, numTempSensors - 1);
 	success = DallasTemperature::requestTemperaturesByAddress(
-			(infoPtr + tempSensorIndex)->address);
+			(infoPtr + tempSensorIndex)->oneWireAddress);
 	if (success) {
 		conversionInProcess = true;
 		conversionStartTime = millis();
@@ -141,7 +130,7 @@ void nonBlockingDS18B20::updateTemps() {
 	int16_t raw;
 	for (index = 0; index < numTempSensors; index++) {
 		if ((infoPtr + index)->readingPending) {
-			raw = DallasTemperature::getTemp((infoPtr + index)->address);
+			raw = DallasTemperature::getTemp((infoPtr + index)->oneWireAddress);
 			(infoPtr + index)->lastReadingRaw = raw;
 			(infoPtr + index)->readingPending = false;
 		}
@@ -151,7 +140,7 @@ void nonBlockingDS18B20::updateTemps() {
 void nonBlockingDS18B20::getAddressFromTempSensorIndex(DeviceAddress addr,
 		uint8_t tempSensorIndex) {
 	tempSensorIndex = constrain(tempSensorIndex, 0, numTempSensors - 1);
-	memcpy(addr, (infoPtr + tempSensorIndex)->address, sizeof(DeviceAddress));
+	memcpy(addr, (infoPtr + tempSensorIndex)->oneWireAddress, sizeof(DeviceAddress));
 }
 
 uint8_t nonBlockingDS18B20::getOneWireIndexFromTempSensorIndex(
