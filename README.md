@@ -24,7 +24,7 @@ times the loop() executed while the measurement was in process.
 
 ## Methods:
 
-###Class Constructor
+### Class Constructor
 
 	nonBlockingDS18B20(OneWire *w)
 
