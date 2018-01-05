@@ -25,7 +25,6 @@ times the loop() executed while the measurement was in process.
 ## Methods:
 
 ### Class Constructor
-
 	nonBlockingDS18B20(OneWire *w)
 
 Arguments:
@@ -35,3 +34,37 @@ Arguments:
 Returns:
 
 	N/A
+	
+### begin - Search for temp sensors and initialize data structures
+	uint8_t begin(uint8_t defaultResolution)
+	
+Arguments:
+
+	defaultResolution - Default bits resolution for temp sensors: 9, 10, 11, 12
+	
+Returns:
+
+	Number of temp sensor devices found on OneWire bus.
+	
+### startConvertion - Start temp measurment processos on all sensors
+	bool startConvertion()
+	
+Arguments:
+
+	None
+	
+Returns:
+
+	false if measurement already in progress, true otherwise
+	
+### startConvertion - Start temp measurment processos on one sensor
+	bool startConvertion(uint8_t tempSensorIndex)
+	
+Arguments:
+
+	tempSensorIndex - Sensor number: 0 to Number of Sensors -1
+	
+Returns:
+
+	false if measurement already in progress, true otherwise
+
