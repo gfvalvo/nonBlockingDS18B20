@@ -36,7 +36,7 @@ Returns:
 	N/A
 	
 ### begin - Search for temp sensors and initialize data structures
-	uint8_t begin(uint8_t defaultResolution)
+	uint8_t begin(uint8_t defaultResolution);
 	
 Arguments:
 
@@ -44,10 +44,13 @@ Arguments:
 	
 Returns:
 
-	Number of temp sensor devices found on OneWire bus.
+	Number of temp sensor devices found on OneWire bus (numTempSensor). Even if other OneWire
+	devices are found on the bus, The DS18xx-type sensors will be indexed by a tempSensorIndex
+	value between 0 and numTempSensor-1.
+
 	
 ### startConvertion - Start temp measurment processos on all sensors
-	bool startConvertion()
+	bool startConvertion();
 	
 Arguments:
 
@@ -57,14 +60,16 @@ Returns:
 
 	false if measurement already in progress, true otherwise
 	
-### startConvertion - Start temp measurment processos on one sensor
+### startConvertion - Start temp measurment processos on one temp sensor
 	bool startConvertion(uint8_t tempSensorIndex)
 	
 Arguments:
 
-	tempSensorIndex - Sensor number: 0 to Number of Sensors -1
+	tempSensorIndex - Sensor number: 0 to numTempSensor-1
 	
 Returns:
 
 	false if measurement already in progress, true otherwise
+	
+
 

@@ -35,7 +35,8 @@ uint8_t nonBlockingDS18B20::begin(uint8_t defaultResolution = 9) {
 			return 0;
 		}
 		if (DallasTemperature::validFamily(addr)) {
-			memcpy((infoPtr + index2)->oneWireAddress, addr, sizeof(DeviceAddress));
+			memcpy((infoPtr + index2)->oneWireAddress, addr,
+					sizeof(DeviceAddress));
 			DallasTemperature::setResolution((infoPtr + index2)->oneWireAddress,
 					defaultResolution);
 			(infoPtr + index2)->lastReadingRaw = DEVICE_DISCONNECTED_RAW;
@@ -104,23 +105,21 @@ float nonBlockingDS18B20::getLatestTempF(uint8_t tempSensorIndex) {
 }
 
 boolean nonBlockingDS18B20::isConversionDone() {
-	boolean done = true;
+	boolean done = false;
 	if (conversionInProcess) {
 		if (parasiteMode || useConversionTimer) {
 			if (millis() - conversionStartTime >= waitTime) {
+				done = true;
 				conversionInProcess = false;
 				updateTemps();
-			} else {
-				done = false;
 			}
-		} else {
-			if (DallasTemperature::isConversionComplete()) {
-				conversionInProcess = false;
-				updateTemps();
-			} else {
-				done = false;
-			}
+		} else if (DallasTemperature::isConversionComplete()) {
+			done = true;
+			conversionInProcess = false;
+			updateTemps();
 		}
+	} else {
+		done = true;
 	}
 	return done;
 }
@@ -140,7 +139,8 @@ void nonBlockingDS18B20::updateTemps() {
 void nonBlockingDS18B20::getAddressFromTempSensorIndex(DeviceAddress addr,
 		uint8_t tempSensorIndex) {
 	tempSensorIndex = constrain(tempSensorIndex, 0, numTempSensors - 1);
-	memcpy(addr, (infoPtr + tempSensorIndex)->oneWireAddress, sizeof(DeviceAddress));
+	memcpy(addr, (infoPtr + tempSensorIndex)->oneWireAddress,
+			sizeof(DeviceAddress));
 }
 
 uint8_t nonBlockingDS18B20::getOneWireIndexFromTempSensorIndex(
