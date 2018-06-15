@@ -16,6 +16,11 @@ public:
 	nonBlockingDS18B20(OneWire *w) :
 			DallasTemperature(w) {
 	}
+	~nonBlockingDS18B20() {
+		if (infoPtr) {
+			free(infoPtr);
+		}
+	}
 	void getAddressFromTempSensorIndex(DeviceAddress, uint8_t);
 	void setUseConversionTimer(boolean);
 	boolean startConvertion(void);

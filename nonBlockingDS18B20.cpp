@@ -32,6 +32,7 @@ uint8_t nonBlockingDS18B20::begin(uint8_t defaultResolution = 9) {
 	index2 = 0;
 	for (index1 = 0; index1 < DallasTemperature::getDeviceCount(); index1++) {
 		if (!DallasTemperature::getAddress(addr, index1)) {
+			free(infoPtr);
 			return 0;
 		}
 		if (DallasTemperature::validFamily(addr)) {
